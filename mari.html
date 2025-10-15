@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MCV - Ropita Tierna para Bebés</title>
+  <meta name="description" content="Tienda MCV: ropa tierna, pastel y económica para bebés en Colombia." />
+  <style>
+    :root{
+      --bg: #FFF9F7;
+      --card: #ffffff;
+      --accent-1: #FFDDE6;
+      --accent-2: #E8F8FF;
+      --accent-3: #FFF5D6;
+      --muted: #8b8b90;
+      --brand: #D86A9C;
+      --shadow: 0 6px 18px rgba(17,17,17,0.06);
+      --radius: 16px;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#FEFEFF);color:#2b2b2b}
+    a{color:inherit;text-decoration:none}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--accent-2),var(--accent-1));display:grid;place-items:center;box-shadow:var(--shadow)}
+    .logo strong{font-size:22px;color:#fff;letter-spacing:2px}
+    .title{font-weight:700}
+    nav{display:flex;gap:14px;align-items:center}
+    .btn{padding:8px 14px;border-radius:12px;background:transparent;border:1px solid rgba(0,0,0,0.06);cursor:pointer;transition:background-color 0.3s ease, color 0.3s ease}
+    .btn:hover {
+      background-color: var(--accent-1);
+    }
+    .cart-btn{position:relative}
+    .cart-count{position:absolute;top:-6px;right:-6px;background:var(--brand);color:#fff;font-size:12px;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center}
+    .hero{display:flex;gap:28px;align-items:center;padding:24px 28px}
+    .hero-left{flex:1}
+    h1{margin:0;font-size:28px}
+    p.lead{color:var(--muted);margin-top:8px}
+    .cta{margin-top:16px}
+    .cta .primary{background:linear-gradient(90deg,var(--brand),#FF9ABA);color:#fff;padding:12px 18px;border-radius:12px;border:0;font-weight:600;cursor:pointer;transition:background 0.3s ease;}
+    .cta .primary:hover {
+      background: linear-gradient(90deg, #C25282, #E66D8B);
+    }
+    .carousel{width:420px;height:270px;background:linear-gradient(180deg,var(--card),#FBFBFF);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+    .slides{display:flex;height:100%;transition:transform 700ms cubic-bezier(.22,.9,.3,1)}
+    .slide{min-width:100%;display:grid;grid-template-rows:1fr auto;padding:14px}
+    .slide img{width:100%;height:170px;object-fit:cover;border-radius:12px}
+    .float{animation:floatY 6s ease-in-out infinite}
+    @keyframes floatY{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+    .slide .info{display:flex;justify-content:space-between;align-items:center;padding-top:10px}
+    .price{font-weight:700;color:var(--brand)}
+    .dotnav{position:absolute;left:12px;bottom:12px;display:flex;gap:8px}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,0.12);cursor:pointer}
+    .dot.active{background:var(--brand)}
+    .carousel .controls{position:absolute;right:10px;top:8px;display:flex;gap:8px}
+    .control{background:rgba(255,255,255,0.7);border-radius:10px;padding:6px;cursor:pointer}
+    .products{padding:18px 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+    .card{background:var(--card);border-radius:14px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+    .card img{width:100%;height:150px;object-fit:cover;border-radius:10px}
+    .card h3{margin:0;font-size:16px}
+    .meta{display:flex;justify-content:space-between;align-items:center}
+    .tag{background:linear-gradient(90deg,var(--accent-3),#FFF0F0);padding:6px 8px;border-radius:10px;font-size:12px}
+    .price-chip{background:linear-gradient(90deg,#FFFFFF,#FFF8F9);padding:6px 10px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);font-weight:700}
+    footer{padding:20px 28px;color:var(--muted);font-size:14px}
+    @media (max-width:900px){
+      .hero{flex-direction:column;align-items:stretch}
+      .carousel{width:100%;height:260px}
+    }
+    @media (max-width:600px) {
+      .products {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        flex-direction: column;
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      nav {
+        flex-wrap: wrap;
+      }
+      .carousel {
+        width: 100%;
+        height: 220px;
+      }
+    }
+    .card img:hover{transform:translateY(-6px) scale(1.02);transition:transform 300ms}
+    /* Carrito modal */
+    #cartModal{position:fixed;top:0;right:0;width:320px;height:100%;background:#fff;box-shadow:-4px 0 12px rgba(0,0,0,0.1);transform:translateX(100%);transition:transform .3s ease;z-index:100;padding:20px;display:flex;flex-direction:column}
+    #cartModal.active{transform:translateX(0)}
+    #cartItems{flex:1;overflow-y:auto;margin:12px 0}
+    .cart-item{display:flex;justify-content:space-between;margin-bottom:10px}
+    .close-btn{background:var(--brand);color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer}
+
+    /* Animación botón agregar carrito */
+    .btn.add-cart-btn {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .btn.add-cart-btn.added {
+      background-color: var(--brand);
+      color: white;
+      border-color: var(--brand);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><strong>MCV</strong></div>
+      <div>
+        <div class="title">MCV - Ropita Tierna</div>
+        <div style="font-size:12px;color:var(--muted)">Pasteles • Económica • Para bebés en Colombia</div>
+      </div>
+    </div>
+    <nav>
+      <button class="btn">Inicio</button>
+      <button class="btn" onclick="scrollToProducts()">Productos</button>
+      <button class="btn">Contacto</button>
+      <button class="btn cart-btn" onclick="toggleCart()">🛒 Carrito <span class="cart-count" id="cartCount">0</span></button>
+    </nav>
+  </header>  
+  <main>
+    <section class="hero">
+      <div class="hero-left">
+        <h1>Ropita linda y económica para tus pequeños</h1>
+        <p class="lead">Colección de bodies, conjuntos y accesorios en colores pasteles. Ideal para regalos y uso diario — calidad y ternura a un precio amigable.</p>
+        <div class="cta">
+          <button class="primary" onclick="scrollToProducts()">Ver Productos</button>
+        </div>
+      </div>
+      <div class="carousel">
+        <div class="slides" id="slides">
+          <div class="slide">
+            <img  src="./imagenes/body.jpeg"  class="float" >
+            <div class="info"><div>Body de algodon </div><div class="price">$18.900 COP</div></div>
+          </div>
+          <div class="slide">
+            <img class="float" src="./imagenes/estampadas.jpeg">
+            <div class="info"><div>Body Estampado</div><div class="price">$32.500 COP</div></div>
+          </div>
+          <div class="slide">
+            <img class="float" src="./imagenes/tiernas.jpeg">
+            <div class="info"><div>Pijamitas tiernas</div><div class="price">$24.900 COP</div></div>
+          </div>
+        </div>
+        <div class="dotnav" id="dots"></div>
+        <div class="controls">
+          <div class="control" id="prev">◀</div>
+          <div class="control" id="next">▶</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 style="padding:0 28px;">Productos destacados</h2>
+      <div class="products" id="productGrid">
+        <article class="card">
+          <img src="./imagenes/zapatos.jpeg">
+          <h3>Zapaticos Suaves</h3>
+          <div class="meta">
+            <div class="tag">0-6meses</div>
+            <div class="price-chip">$25.500 COP</div>
+          </div>
+          <button class="btn add-cart-btn" onclick="addToCart('Zapaticos Suaves',25500, this)">Agregar al carrito</button>
+        </article>
+        <article class="card">
+          <img src="./imagenes/gorros.jpeg">
+          <h3>Gorritos de lana</h3>
+          <div class="meta">
+            <div class="tag">3-24 meses</div>
+            <div class="price-chip">$21.900 COP</div>
+          </div>
+          <button class="btn add-cart-btn" onclick="addToCart('Gorritos Suaves',21900, this)">Agregar al carrito</button>
+        </article>
+        <article class="card">
+          <img src="./imagenes/cobija.jpeg">
+          <h3>Cobija Polar</h3>
+          <div class="meta">
+            <div class="tag">Unisex</div>
+            <div class="price-chip">$45.900 COP</div>
+          </div>
+          <button class="btn add-cart-btn" onclick="addToCart('Cobija Polar',45500, this)">Agregar al carrito</button>
+        </article>
+        <article class="card">
+          <img src="./imagenes/mordedor.jpeg">
+          <h3>Mordedor de Silicona</h3>
+          <div class="meta">
+            <div class="tag">6-12 meses</div>
+            <div class="price-chip">$12.900 COP</div>
+          </div>
+          <button class="btn add-cart-btn" onclick="addToCart('Mordedor de Silicona',12900, this)">Agregar al carrito</button>
+        </article>
+        <article class="card">
+          <img src="./imagenes/juguete.jpeg">
+          <h3>Juguete de madera</h3>
+          <div class="meta">
+            <div class="tag">6-12 meses</div>
+            <div class="price-chip">$29.900 COP</div>
+          </div>
+          <button class="btn add-cart-btn" onclick="addToCart('Juguete de madera',29900, this)">Agregar al carrito</button>
+        </article>
+        <article class="card">
+          <img src="./imagenes/tetero.jpeg">
+          <h3>Tetero anti colicos</h3>
+          <div class="meta">
+            <div class="tag">Unisex</div>
+            <div class="price-chip">$39.500 COP</div>
+          </div>
+          <button class="btn add-cart-btn" onclick="addToCart('Tetero anti colicos',39500, this)">Agregar al carrito</button>
+        </article>
+        <article class="card">
+          <img src="./imagenes/maleta.jpeg">
+          <h3>Pañalera multiusos</h3>
+          <div class="meta">
+            <div class="tag"> Unisex</div>
+            <div class="price-chip">$99.900 COP</div>
+          </div>
+          <button class="btn add-cart-btn" onclick="addToCart('Pañalera multiusos',99900, this)">Agregar al carrito</button>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="cartModal" aria-hidden="true">
+    <h2>Tu carrito</h2>
+    <button class="close-btn" onclick="toggleCart()">Cerrar</button>
+    <div id="cartItems"></div>
+    <div>
+      <strong>Total: </strong><span id="cartTotal">$0 COP</span>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 MCV Ropita Tierna. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    const cart = [];
+    const cartCountEl = document.getElementById('cartCount');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const cartModal = document.getElementById('cartModal');
+
+    function addToCart(name, price, btn) {
+      cart.push({ name, price });
+      updateCart();
+
+      // Animación botón: cambiar color a morado y volver
+      btn.classList.add('added');
+      setTimeout(() => {
+        btn.classList.remove('added');
+      }, 800);
+    }
+
+function updateCart() {
+  cartCountEl.textContent = cart.length;
+  cartItemsEl.innerHTML = '';
+  let total = 0;
+  cart.forEach((item, index) => {
+    total += item.price;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    
+    // Texto del producto
+    const textSpan = document.createElement('span');
+    textSpan.textContent = `${item.name} - $${item.price.toLocaleString()} COP`;
+    
+    // Botón eliminar
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = '✕';
+    removeBtn.style.marginLeft = '10px';
+    removeBtn.style.background = 'transparent';
+    removeBtn.style.border = 'none';
+    removeBtn.style.cursor = 'pointer';
+    removeBtn.style.color = '#D86A9C';
+    removeBtn.title = 'Eliminar producto';
+    removeBtn.onclick = () => removeFromCart(index);
+    
+    div.appendChild(textSpan);
+    div.appendChild(removeBtn);
+    
+    cartItemsEl.appendChild(div);
+  });
+  cartTotalEl.textContent = `$${total.toLocaleString()} COP`;
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);  // Quita el producto del arreglo
+  updateCart();           // Actualiza la vista del carrito
+}
+
+
+    function toggleCart() {
+      if(cartModal.classList.contains('active')){
+        cartModal.classList.remove('active');
+        cartModal.setAttribute('aria-hidden', 'true');
+      } else {
+        cartModal.classList.add('active');
+        cartModal.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    function scrollToProducts(){
+      document.getElementById('productGrid').scrollIntoView({behavior:'smooth'});
+    }
+
+    // Carousel simple funcionalidad
+    const slides = document.getElementById('slides');
+    const dotsContainer = document.getElementById('dots');
+    const slideCount = slides.children.length;
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      if(index < 0) index = slideCount - 1;
+      if(index >= slideCount) index = 0;
+      slides.style.transform = `translateX(-${index * 100}%)`;
+      currentSlide = index;
+      updateDots();
+    }
+
+    function updateDots() {
+      dotsContainer.innerHTML = '';
+      for(let i=0; i<slideCount; i++){
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === currentSlide ? ' active' : '');
+        dot.onclick = () => showSlide(i);
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    document.getElementById('prev').onclick = () => showSlide(currentSlide - 1);
+    document.getElementById('next').onclick = () => showSlide(currentSlide + 1);
+
+    updateDots();
+    showSlide(0);
+  </script>
+</body>
+</html>
